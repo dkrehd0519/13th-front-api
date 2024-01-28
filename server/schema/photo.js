@@ -5,7 +5,11 @@ const photoSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  captions: {
+  img_path: {
+    type: String,
+    required: true,
+  },
+  text: {
     type: String,
     required: false,
   },
@@ -17,11 +21,8 @@ const photoSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  filename: {
-    type: String,
-    required: true,
-  },
 });
+photoSchema.set("timestamps", true);
 
 const Photo = mongoose.model("photo", photoSchema);
 module.exports = Photo;

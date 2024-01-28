@@ -8,6 +8,7 @@ function CreatePage() {
   const [body, setBody] = useState("");
   const [ownerName, setOwnerName] = useState("");
   const [ownerPass, setOwnerPass] = useState("");
+  const [file, setFile] = useState();
 
   return (
     <div>
@@ -22,6 +23,7 @@ function CreatePage() {
               onChange={(e) => setBody(e.target.value)}
             ></textarea>
           </div>
+          <input type="file" onChange={(e) => setFile(e.target.files[0])} />
           <div className="owner">
             <input
               placeholder="이름"
@@ -39,22 +41,25 @@ function CreatePage() {
         <button
           onClick={(e) => {
             console.log(title, body, ownerName, ownerPass);
-            fetch("https://ll-api.jungsub.com/recap/add", {
+            const formData = new FormData();
+
+            formData.append("title", title);
+            formData.append("text", body);
+            formData.append("owner_name", ownerName);
+            formData.append("owner_pass", ownerPass);
+            formData.append("file", file);
+
+            fetch("http://localhost:3312/gallery/upload", {
               method: "post",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                title,
-                body,
-                owner_name: ownerName,
-                owner_pass: ownerPass,
-              }),
+              // headers: {
+              //   "Content-Type": "",
+              // },
+              body: formData,
             })
               .then((data) => data.json())
               .then((json) => {
                 if (!!json.ok) {
-                  navigate("/recap/" + json.ok._id);
+                  // navigate("/recap/" + json.ok._id);
                 }
               });
           }}

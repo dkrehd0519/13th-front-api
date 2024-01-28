@@ -5,6 +5,11 @@ const app = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const Photo = require("./schema/photo");
+const fileupload = require("express-fileupload");
+const fs = require("fs");
+
+// Global Exports
+global.appRoot = __dirname;
 
 // Create Database
 // Mongoose Connect
@@ -32,6 +37,23 @@ var server = app.listen(port, function () {
 
 // Cors
 app.use(cors());
+
+// File upload
+app.use(
+  fileupload({
+    limits: { fileSize: 10 * 1024 * 1024 },
+    abortOnLimit: true,
+    useTempFiles: true,
+    tempFileDir: appRoot + "/tmp/",
+    safeFileNames: true,
+    preserveExtension: false, // default
+  })
+);
+// Create Required Dirs
+if (!fs.existsSync(appRoot + "/files/"))
+  fs.mkdirSync(appRoot + "/files/", { recursive: true });
+if (!fs.existsSync(appRoot + "/files/gallery"))
+  fs.mkdirSync(appRoot + "/files/gallery", { recursive: true });
 
 console.log("Request");
 
