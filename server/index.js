@@ -55,7 +55,7 @@ if (!fs.existsSync(appRoot + "/files/"))
 if (!fs.existsSync(appRoot + "/files/gallery"))
   fs.mkdirSync(appRoot + "/files/gallery", { recursive: true });
 
-console.log("Request");
+app.use("/files", express.static("files"));
 
 // Middleware
 process.env.NODE_ENV == "development" && app.use(morgan("dev"));

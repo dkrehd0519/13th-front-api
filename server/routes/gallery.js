@@ -10,12 +10,14 @@ router.get("/", (req, res) => {});
 router.get("/list", async (req, res) => {
   try {
     const photos = (await Photo.find()).map(
-      ({ _id, title, text, owner_name, img_path }) => ({
+      ({ _id, title, text, owner_name, img_path, createdAt, updatedAt }) => ({
         _id,
         title,
         text,
         owner_name,
         img_path,
+        createdAt,
+        updatedAt,
       })
     );
     res.json(photos);
