@@ -28,11 +28,10 @@ router.get("/list", async (req, res) => {
 
 router.post("/upload", async (req, res) => {
   try {
-    const { title, img, text, owner_name, owner_pass } = req.body;
-    if ((!title, /*!img,*/ !owner_name, !owner_pass))
+    const { title, text, owner_name, owner_pass } = req.body;
+    const file = req.files?.file;
+    if (!title || !owner_name || !owner_pass || !file)
       return res.status(400).json({ error: "invalid body" });
-
-    const file = req.files.file;
 
     const id = new mongoose.Types.ObjectId();
 
