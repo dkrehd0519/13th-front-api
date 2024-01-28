@@ -57,10 +57,11 @@ router.post("/upload", async (req, res) => {
   }
 });
 
-router.post("/delete", async (req, res) => {
+router.post("/delete/:id", async (req, res) => {
   try {
     console.log(req.body);
-    const { id, owner_name, owner_pass } = req.body;
+    const { id } = req.params;
+    const { owner_name, owner_pass } = req.body;
     if (!owner_name || !owner_pass || !id)
       return res.status(400).json({ error: "invalid body" });
 
