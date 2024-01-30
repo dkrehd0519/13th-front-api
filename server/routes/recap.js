@@ -2,7 +2,7 @@ const { Router } = require("express");
 const Recap = require("../schema/recap");
 const router = Router();
 
-router.get("/", (req, res) => {});
+router.get("/", (req, res) => res.send("Recap Route"));
 
 router.get("/list", async (req, res) => {
   try {

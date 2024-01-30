@@ -5,7 +5,7 @@ const mime = require("mime-types");
 const router = Router();
 const fs = require("fs");
 
-router.get("/", (req, res) => {});
+router.get("/", (req, res) => res.send("Gallery Route"));
 
 router.get("/list", async (req, res) => {
   try {
