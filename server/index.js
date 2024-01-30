@@ -71,6 +71,22 @@ app.use("/gallery", require("./routes/gallery"));
 app.use("/recap", require("./routes/recap"));
 app.use("/talk", require("./routes/talk"));
 
+const exec = require("child_process").exec;
+app.get("/repull", (req, res) => {
+  exec("git pull", (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error during git pull: ${error.message}`);
+      return res.status(500).send(`Error during git pull: ${error.message}`);
+    }
+    if (stderr) {
+      console.error(`Git pull stderr: ${stderr}`);
+      return res.status(500).send(`Git pull stderr: ${stderr}`);
+    }
+    console.log(`Git pull output: ${stdout}`);
+    return res.send(`Git pull output: ${stdout}`);
+  });
+});
+
 app.get("/", (req, res) => {
   // console.log(
   //   Photo.create({
