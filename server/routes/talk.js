@@ -59,6 +59,26 @@ router.get("/mypage/list/:memberId", async (req, res) => {
   }
 });
 
+router.post("/mypage/get/:memberId", async (req, res) => {
+  const { memberId } = req.params;
+  const { qid } = req.body;
+  try {
+    // const photos = await TalkImage.find({ memberId });
+
+    const photo = await TalkImage.findOne({
+      memberId,
+      q_id: qid,
+    }).sort({
+      updatedAt: -1,
+    });
+
+    res.json({ photo });
+  } catch (err) {
+    res.sendStatus(500);
+    console.error(err);
+  }
+});
+
 router.post("/mypage/answer", async (req, res) => {
   try {
     const { c_answer, t_answer, memberID, q_id } = req.body;
