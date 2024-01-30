@@ -56,6 +56,8 @@ if (!fs.existsSync(appRoot + "/files/gallery"))
   fs.mkdirSync(appRoot + "/files/gallery", { recursive: true });
 if (!fs.existsSync(appRoot + "/files/diary"))
   fs.mkdirSync(appRoot + "/files/diary", { recursive: true });
+if (!fs.existsSync(appRoot + "/files/talk"))
+  fs.mkdirSync(appRoot + "/files/talk", { recursive: true });
 
 app.use("/files", express.static("files"));
 
@@ -67,6 +69,7 @@ app.use(bodyParser.json());
 app.use("/diary", require("./routes/diary"));
 app.use("/gallery", require("./routes/gallery"));
 app.use("/recap", require("./routes/recap"));
+app.use("/talk", require("./routes/talk"));
 
 app.get("/", (req, res) => {
   // console.log(
