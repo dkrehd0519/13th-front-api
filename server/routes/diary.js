@@ -35,6 +35,33 @@ router.get("/list", async (req, res) => {
     res.sendStatus(500);
   }
 });
+router.get("/get/:id", async (req, res) => {
+  try {
+    const {
+      _id,
+      title,
+      date,
+      body,
+      owner_name,
+      img_path,
+      createdAt,
+      updatedAt,
+    } = await Diary.findById(req.params.id);
+
+    res.json({
+      _id,
+      title,
+      date,
+      body,
+      owner_name,
+      img_path,
+      createdAt,
+      updatedAt,
+    });
+  } catch {
+    res.sendStatus(500);
+  }
+});
 
 router.post("/create", async (req, res) => {
   try {
