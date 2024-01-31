@@ -111,26 +111,31 @@ router.post("/mypage/answer", async (req, res) => {
   }
 });
 
-router.post("/delete/:id", async (req, res) => {
+router.post("/mypage/delete/:qid", async (req, res) => {
   try {
-    console.log(req.body);
-    const { id } = req.params;
-    const { owner_name, owner_pass } = req.body;
-    if (!owner_name || !owner_pass || !id)
-      return res.status(400).json({ error: "invalid body" });
+    const { qid } = req.params;
+    const { memberID } = req.body;
+    if (!memberID) return res.status(400).json({ error: "invalid body" });
 
-    const targetTalkUser = await TalkUser.findOneAndDelete({
-      _id: id,
-      owner_name: owner_name,
-      owner_pass: owner_pass,
+    const targetTalkUser = await TalkImage.find({
+      q_id: qid,
+      memberId: memberID,
     });
 
-    // fs.unlink()
+    const deleteTalkUser = await TalkImage.deleteMany({
+      q_id: qid,
+      memberId: memberID,
+    });
 
     if (targetTalkUser) {
-      fs.unlink(appRoot + "/" + targetTalkUser.img_path, () => {});
-      return res.json({ ok: "deleted" });
+      targetTalkUser.map((element) =>
+        fs.unlink(appRoot + element.img_path, () => {})
+      );
+
+      return res.json({ ok: { targetTalkUser, deleteTalkUser } });
     } else return res.json({ error: "not found or invalid password" });
+    return res.sendStatus(200);
+    // fs.unlink()
   } catch (e) {
     res.sendStatus(500);
     console.error(e);
