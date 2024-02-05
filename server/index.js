@@ -70,6 +70,8 @@ app.use("/diary", require("./routes/diary"));
 app.use("/gallery", require("./routes/gallery"));
 app.use("/recap", require("./routes/recap"));
 app.use("/talk", require("./routes/talk"));
+app.use("/ptrack/user", require("./routes/ptrack/user"));
+app.use("/ptrack/post", require("./routes/ptrack/post"));
 
 const exec = require("child_process").exec;
 app.get("/repull", (req, res) => {
