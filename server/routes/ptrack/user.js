@@ -8,8 +8,12 @@ router.post("/signup", async (req, res) => {
   try {
     const { username, password, name, email } = req.body;
 
-    if (!username || !password || !name || !email)
-      return res.status(400).json({ error: "invalid body" });
+    if (!username || !password || !name)
+      return res.status(400).json({
+        error: "invalid body",
+        need: "username, password, name in body",
+        got: { body: req.body, params: req.params, query: req.query },
+      });
 
     const targetDiary = await PTrackUser.create({
       username,
@@ -38,7 +42,11 @@ router.post("/login", async (req, res) => {
     const { username, password } = req.body;
 
     if (!username || !password)
-      return res.status(400).json({ error: "invalid body" });
+      return res.status(400).json({
+        error: "invalid body",
+        need: "username, password in body",
+        got: { body: req.body, params: req.params, query: req.query },
+      });
 
     const targetUser = await PTrackUser.findOne({
       username,
@@ -66,7 +74,12 @@ router.get("/", async (req, res) => {
   try {
     const { uid } = req.query;
 
-    if (!uid) return res.status(400).json({ error: "invalid body" });
+    if (!uid)
+      return res.status(400).json({
+        error: "invalid body",
+        need: "uid in query",
+        got: { body: req.body, params: req.params, query: req.query },
+      });
 
     const targetUser = await PTrackUser.findById(uid);
 

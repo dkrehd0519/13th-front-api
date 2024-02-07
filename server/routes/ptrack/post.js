@@ -22,7 +22,11 @@ router.post("/", async (req, res) => {
     const { title, body, uid } = req.body;
 
     if (!title || !body || !uid)
-      return res.status(400).json({ error: "invalid body" });
+      return res.status(400).json({
+        error: "invalid body",
+        need: "title, body, uid in body",
+        got: { body: req.body, params: req.params, query: req.query },
+      });
 
     // Check user exist
     const user = await PTrackUser.findById(uid);
@@ -55,7 +59,12 @@ router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
-    if (!id) return res.status(400).json({ error: "invalid body" });
+    if (!id)
+      return res.status(400).json({
+        error: "invalid body",
+        need: "id in params",
+        got: { body: req.body, params: req.params, query: req.query },
+      });
 
     const targetPost = await PTrackPost.findById(id).populate("uid", "name");
 
@@ -79,7 +88,12 @@ router.patch("/:id", async (req, res) => {
     const { title, body, uid } = req.body;
     const { id } = req.params;
 
-    if (!uid) return res.status(400).json({ error: "invalid body" });
+    if (!uid)
+      return res.status(400).json({
+        error: "invalid body",
+        need: "uid in body",
+        got: { body: req.body, params: req.params, query: req.query },
+      });
 
     // Check user exist
     const user = await PTrackUser.findById(uid);
@@ -124,7 +138,14 @@ router.delete("/:id", async (req, res) => {
     const { uid } = req.body;
     const { id } = req.params;
 
-    if (!uid) return res.status(400).json({ error: "invalid body" });
+    if (!uid)
+      return res
+        .status(400)
+        .json({
+          error: "invalid body",
+          need: "uid in body",
+          got: { body: req.body, params: req.params, query: req.query },
+        });
 
     // Check user exist
     const user = await PTrackUser.findById(uid);
