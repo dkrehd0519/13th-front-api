@@ -21,8 +21,8 @@ var mongoUri = process.env.MDB
 //   process.env.NODE_ENV === "production" ? mongoUri : process.env.TEST_MDB;
 
 mongoose
-  .connect(mongoUri, { useUnifiedTopology: true, dbName: "ll-frontend" })
-  .then((a) => console.log("database success"))
+  .connect(mongoUri, { dbName: "ll-frontend" })
+  .then(() => console.log("database success"))
   .catch((e) => console.log("database failed -", e.message));
 
 // Open Server
@@ -50,14 +50,11 @@ app.use(
   })
 );
 // Create Required Dirs
-if (!fs.existsSync(appRoot + "/files/"))
-  fs.mkdirSync(appRoot + "/files/", { recursive: true });
-if (!fs.existsSync(appRoot + "/files/gallery"))
-  fs.mkdirSync(appRoot + "/files/gallery", { recursive: true });
-if (!fs.existsSync(appRoot + "/files/diary"))
-  fs.mkdirSync(appRoot + "/files/diary", { recursive: true });
-if (!fs.existsSync(appRoot + "/files/talk"))
-  fs.mkdirSync(appRoot + "/files/talk", { recursive: true });
+if (!fs.existsSync(appRoot + "/files/")) fs.mkdirSync(appRoot + "/files/", { recursive: true });
+if (!fs.existsSync(appRoot + "/files/gallery")) fs.mkdirSync(appRoot + "/files/gallery", { recursive: true });
+if (!fs.existsSync(appRoot + "/files/diary")) fs.mkdirSync(appRoot + "/files/diary", { recursive: true });
+if (!fs.existsSync(appRoot + "/files/talk")) fs.mkdirSync(appRoot + "/files/talk", { recursive: true });
+if (!fs.existsSync(appRoot + "/files/grouping")) fs.mkdirSync(appRoot + "/files/grouping", { recursive: true });
 
 app.use("/files", express.static("files"));
 
@@ -70,6 +67,7 @@ app.use("/diary", require("./routes/diary"));
 app.use("/gallery", require("./routes/gallery"));
 app.use("/recap", require("./routes/recap"));
 app.use("/talk", require("./routes/talk"));
+app.use("/grouping", require("./routes/grouping"));
 app.use("/ptrack/user", require("./routes/ptrack/user"));
 app.use("/ptrack/post", require("./routes/ptrack/post"));
 
