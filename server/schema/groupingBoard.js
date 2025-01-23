@@ -49,6 +49,10 @@ const groupingBoardSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  participants: {
+    type: [String],
+    default: [],
+  },
 });
 groupingBoardSchema.set("timestamps", true);
 

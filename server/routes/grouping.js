@@ -148,6 +148,83 @@ router.get("/groupList/:groupID", async (req, res) => {
   }
 });
 
+router.post("/joinGroup/:groupID", async (req, res) => {
+  try {
+    const { groupID } = req.params;
+    const { memberID } = req.body;
+
+    if (!memberID) {
+      return res.status(400).json({ error: "memberID is required" });
+    }
+
+    // 사용자 존재 여부 확인
+    const user = await GroupingUser.findById(memberID);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // 그룹 조회
+    const group = await GroupingBoard.findById(groupID);
+    if (!group) {
+      return res.status(404).json({ error: "Group not found" });
+    }
+
+    // 이미 입장한 사용자 확인
+    if (group.participants.includes(user.name)) {
+      return res.status(409).json({ error: "User already joined the group" });
+    }
+
+    // 참가자 추가
+    await GroupingBoard.findByIdAndUpdate(groupID, { $push: { participants: user.name } }, { new: true });
+
+    res.json({ message: "User joined the group successfully", groupID });
+  } catch (error) {
+    console.error("Error joining group:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get("/groupParticipants/:groupID", async (req, res) => {
+  try {
+    const { groupID } = req.params;
+    const { memberID } = req.query; // 쿼리로 memberID 받기
+
+    // 그룹 조회 (participants와 maxNum 필드만 가져오기)
+    const group = await GroupingBoard.findById(groupID, "participants maxNum");
+
+    if (!group) {
+      return res.status(404).json({ error: "Group not found" });
+    }
+
+    // 참가 인원 및 최대 인원 수 확인
+    const participantCount = group.participants.length;
+    const maxNum = parseInt(group.maxNum, 10) || 0; // maxNum이 문자열로 저장될 가능성 처리
+
+    // 모집 인원과 참가 인원 비교
+    const isOpen = participantCount < maxNum;
+
+    // 사용자가 참가했는지 확인
+    let hasJoined = false;
+    if (memberID) {
+      const user = await GroupingUser.findById(memberID);
+      if (user) {
+        hasJoined = group.participants.includes(user.name);
+      }
+    }
+
+    res.json({
+      participants: group.participants,
+      participantCount: participantCount,
+      maxNum: maxNum,
+      isOpen: isOpen,
+      hasJoined: hasJoined,
+    });
+  } catch (error) {
+    console.error("Error fetching group participants:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 module.exports = router;
 
 // title, category, createdBy, date, startTime, endTime, maxNum, description
