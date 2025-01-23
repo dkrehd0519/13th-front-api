@@ -59,4 +59,21 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.get("/userInfo/:memberID", async (req, res) => {
+  try {
+    const { memberID } = req.params;
+
+    const userInfo = await TypeTestUser.findById(memberID, "name track");
+
+    if (!userInfo) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json(userInfo);
+  } catch (error) {
+    console.error("Error fetching user info:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 module.exports = router;
