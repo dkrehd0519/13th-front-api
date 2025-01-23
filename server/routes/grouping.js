@@ -64,10 +64,21 @@ router.get("/", (req, res) => res.send("Grouping Route"));
 // 그룹 추가 (POST)
 router.post("/addGroup", async (req, res) => {
   try {
-    const { groupName, date, time, location, maxNum, description, category, memberID } = req.body;
+    const { groupName, date, startTime, endTime, location, maxNum, description, category, memberID } = req.body;
     const file = req.files?.img;
 
-    if (!groupName || !date || !file || !memberID || !time || !location || !maxNum || !description || !category) {
+    if (
+      !groupName ||
+      !date ||
+      !file ||
+      !memberID ||
+      !startTime ||
+      !endTime ||
+      !location ||
+      !maxNum ||
+      !description ||
+      !category
+    ) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
@@ -85,7 +96,8 @@ router.post("/addGroup", async (req, res) => {
     const newGroup = await GroupingBoard.create({
       groupName,
       date,
-      time,
+      startTime,
+      endTime,
       location,
       maxNum,
       description,
@@ -116,4 +128,26 @@ router.get("/groupList", async (req, res) => {
   }
 });
 
+router.get("/groupList/:groupID", async (req, res) => {
+  try {
+    const { groupID } = req.params;
+
+    const groupDetail = await GroupingBoard.findById(
+      groupID,
+      "img_path category createdBy groupName location date startTime endTime maxNum description"
+    );
+
+    if (!groupDetail) {
+      return res.status(404).json({ error: "groupDetail not found" });
+    }
+
+    res.json(groupDetail);
+  } catch (error) {
+    console.error("Error fetching group detail:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 module.exports = router;
+
+// title, category, createdBy, date, startTime, endTime, maxNum, description

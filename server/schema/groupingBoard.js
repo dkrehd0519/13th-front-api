@@ -9,7 +9,11 @@ const groupingBoardSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  time: {
+  startTime: {
+    type: String,
+    required: false,
+  },
+  endTime: {
     type: String,
     required: false,
   },
